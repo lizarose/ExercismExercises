@@ -22,10 +22,7 @@ public class SecurityPassMaker
     // }
     if (support.GetType() == typeof(Security))
         {
-            string priority = "Priority Personnel";
-            string title = support.Title;
-            string result = $"{title} {priority}";
-            return result;
+            return $"{support.Title} Priority Personnel";
         }
         else if (support is Staff)
         {
