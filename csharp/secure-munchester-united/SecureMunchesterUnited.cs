@@ -4,17 +4,37 @@ public class SecurityPassMaker
 {
     public string GetDisplayName(TeamSupport support)
     {
-        if (support is Security && !(support is SecurityJunior) && !(support is SecurityIntern) && !(support is PoliceLiaison))
+    //     if (support is Security && !(support is SecurityJunior) && !(support is SecurityIntern) && !(support is PoliceLiaison))
+    //     {
+    //         return support.Title + " Priority Personnel";
+    //     }
+    //     else if (support is Staff)
+    //     {
+    //         return support.Title;
+    //     } 
+    //     else 
+    //     {
+    //         return "Too Important for a Security Pass";
+    //     }
+        
+    //     throw new NotImplementedException($"Please implement the SecurityPassMaker.GetDisplayName() method");
+        
+    // }
+    if (support.GetType() == typeof(Security))
         {
-            return support.Title + " Priority Personnel";
+            string priority = "Priority Personnel";
+            string title = support.Title;
+            string result = $"{title} {priority}";
+            return result;
         }
-        else if (support is Staff)
+        else if (support.GetType().IsSubclassOf(typeof(Staff)) || support.GetType() == typeof(Staff))
         {
             return support.Title;
         } 
         else 
         {
-            return "Too Important for a Security Pass";
+            string message = "Too Important for a Security Pass";
+            return message;
         }
         
         throw new NotImplementedException($"Please implement the SecurityPassMaker.GetDisplayName() method");
