@@ -27,7 +27,7 @@ public class SecurityPassMaker
             string result = $"{title} {priority}";
             return result;
         }
-        else if (support.GetType().IsSubclassOf(typeof(Staff)) || support.GetType() == typeof(Staff))
+        else if (support is Staff)
         {
             return support.Title;
         } 
