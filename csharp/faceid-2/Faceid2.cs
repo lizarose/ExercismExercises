@@ -31,6 +31,10 @@ public class Identity
 public class Authenticator
 {
     public HashSet<Identity> newUser = new HashSet<Identity>();
+    HashSet<Identity> adminUser = new HashSet<Identity>
+    {
+        new Identity("admin@exerc.ism", new FacialFeatures("green", 0.9m))
+    };
     
     public static bool AreSameFace(FacialFeatures faceA, FacialFeatures faceB)
     {        
@@ -40,47 +44,12 @@ public class Authenticator
         }
         return faceA.Equals(faceB);
     }
-    public bool IsAdmin(Identity identity)
-    {
-        if (identity.Email == "admin@exerc.ism" && identity.FacialFeatures.EyeColor == "green" && identity.FacialFeatures.PhiltrumWidth == 0.9m) 
-        {
-            return true;
-        }
-        return false;
-    }
-    public bool Register(Identity identity)
-    {
-        if (newUser.Contains(identity))
-        {
-            return false;
-        }
-        else
-        {
-            newUser.Add(identity);
-            return true;
-        }
-    }
-    public bool IsRegistered(Identity identity)
-    {
-       if (Register(identity) == newUser.Contains(identity))
-       {
-           return false;
-       }
-        else
-        {
-            return true;
-        }
-    }
-    public static bool AreSameObject(Identity identityA, Identity identityB)
-    {
-        if (identityA == identityB)
-        {
-            identityA.Equals(identityB);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
+    
+    public bool IsAdmin(Identity identity) => adminUser.Contains(identity);
+    
+    public bool Register(Identity identity) => newUser.Add(identity);
+    
+    public bool IsRegistered(Identity identity) => newUser.Contains(identity);
+    public static bool AreSameObject(Identity identityA, Identity identityB) => Object.ReferenceEquals(identityA, identityB);
+    
 }

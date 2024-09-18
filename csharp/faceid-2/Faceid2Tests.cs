@@ -92,6 +92,8 @@ public class Faceid2Tests
         var authenticator = new Authenticator();
         authenticator.Register(new Identity("alice@thecompetition.com", new FacialFeatures("blue", 0.9m)));
         Assert.False(authenticator.IsRegistered(new Identity("alice@thecompetition.com", new FacialFeatures("blue", 0.8m))));
+        Assert.False(authenticator.IsRegistered(new Identity("alice@thecompetition.com", new FacialFeatures("blue", 0.8m))));
+
     }
 
     [Fact]
