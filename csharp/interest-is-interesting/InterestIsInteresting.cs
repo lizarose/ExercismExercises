@@ -1,4 +1,5 @@
 using System;
+
 static class SavingsAccount
 {
     public static float InterestRate(decimal balance)
@@ -24,21 +25,26 @@ static class SavingsAccount
             return 0.00f;
         }
     }
+
     public static decimal Interest(decimal balance)
     {
-        float rate = InterestRate(balance);
-        decimal decRate = (decimal)rate;
+        var rate = InterestRate(balance);
+        var decRate = (decimal)rate;
         
             return balance * (decRate / 100);
     }
+
     public static decimal AnnualBalanceUpdate(decimal balance)
     {
-        decimal interest = Interest(balance);
+        var interest = Interest(balance);
+
             return balance + interest;
     }
+
     public static int YearsBeforeDesiredBalance(decimal balance, decimal targetBalance)
     {
-        int years = 0;
+        var years = 0;
+
         while (balance < targetBalance)
         {
             balance = AnnualBalanceUpdate(balance);
