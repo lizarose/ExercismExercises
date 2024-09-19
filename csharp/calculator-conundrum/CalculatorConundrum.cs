@@ -1,38 +1,36 @@
 using System;
+
 public static class SimpleCalculator
 {
     public static string Calculate(int operand1, int operand2, string operation)
     {
-        if (operation == "+")
+         try
         {
-            return $"{operand1} + {operand2} = {operand1 + operand2}";
-        }
-        else if (operation == "*")
-        {
-            return $"{operand1} * {operand2} = {operand1 * operand2}";
-        }
-        else if (operation == "/")
-        {
-            if (operand2 != 0)
+             if (operation == null)
             {
-            return $"{operand1} / {operand2} = {operand1 / operand2}";
+                 throw new ArgumentNullException("Null Operation");
             }
-            else
+            else if (operation == "")
             {
-                return "Division by zero is not allowed.";
+                  throw new ArgumentException("No Value Entered for Operation");
+            }
+            
+            switch (operation)
+            {
+                case "+": 
+                    return $"{operand1} + {operand2} = {operand1 + operand2}";
+                case "*":
+                    return $"{operand1} * {operand2} = {operand1 * operand2}";
+                case "/":
+                    return operand2 != 0 ? $"{operand1} / {operand2} = {operand1 / operand2}": "Division by zero is not allowed.";
+                default:
+                    throw new ArgumentOutOfRangeException("Non Valid Operation");
             }
         }
-        else if (operation == null)
+        catch (ArgumentOutOfRangeException)
         {
-             throw new ArgumentNullException("Null Operation");
+            throw new ArgumentOutOfRangeException("Non-Valid Operation");
         }
-        else if (operation == "")
-        {
-              throw new ArgumentException("No Value Entered for Operation");
-        }
-        else
-        {
-            throw new ArgumentOutOfRangeException("Non Valid Operation");
-        }
+    
     }
 }
