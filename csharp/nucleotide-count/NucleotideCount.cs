@@ -16,23 +16,14 @@ public static class NucleotideCount
 
         foreach(char character in sequence)
         {
-           switch (character)
+           if(charCount.ContainsKey(character))
            {
-               case 'A':
-                   charCount['A']++;
-                   break;
-               case 'C':
-                   charCount['C']++;
-                   break;
-               case 'G':
-                   charCount['G']++;
-                   break;
-               case 'T':
-                   charCount['T']++;
-                   break;
-               default:
-                   throw new ArgumentException("Invalid Sequence");
+                charCount[character]++;
            }
+            else
+            {
+                throw new ArgumentException("Invalid Sequence");
+            }
         }
         return charCount;
     }
