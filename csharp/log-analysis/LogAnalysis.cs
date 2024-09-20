@@ -16,11 +16,8 @@ public static class LogAnalysis
         return log.Substring(index, endIndex - index).Trim();
     }
     // TODO: define the 'Message()' extension method on the `string` type
-        public static string Message(this string log)
-    {
-            var separate = log.Split(": ");
-            return separate[1].Trim();
-    }
+        public static string Message(this string log) => log.SubstringAfter(": ");
+    
     // TODO: define the 'LogLevel()' extension method on the `string` type
         public static string LogLevel(this string log) => log.SubstringBetween("[","]");
 }
