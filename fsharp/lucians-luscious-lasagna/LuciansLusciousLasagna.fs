@@ -4,11 +4,9 @@ module LuciansLusciousLasagna
 let expectedMinutesInOven = 40
 
 // TODO: define the 'remainingMinutesInOven' function
-let currentOvenTimeIn = 30
 let remainingMinutesInOven currentOvenTimeIn = expectedMinutesInOven - currentOvenTimeIn
 
 // TODO: define the 'preparationTimeInMinutes' function
-let layers = 2
 let preparationTimeInMinutes layers = layers * 2
 
 // TODO: define the 'elapsedTimeInMinutes' function
