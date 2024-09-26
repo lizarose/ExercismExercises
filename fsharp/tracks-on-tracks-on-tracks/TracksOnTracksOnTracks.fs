@@ -15,9 +15,7 @@ let reverseList(languages: string list): string list =
 
 let excitingList (languages: string list): bool = 
     match languages with
-    | "F#" :: _ -> true
-    | _ :: "F#" :: [] -> true
-    | _ :: "F#" :: [_] -> true
+    | "F#" :: _  | _ :: "F#" :: [] | _ :: "F#" :: [_] -> true
     | _ -> false
 
 
