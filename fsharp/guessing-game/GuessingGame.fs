@@ -2,19 +2,19 @@ module GuessingGame
 
 let reply (guess: int): string = 
     match guess with
-    | 42 -> "Correct"
     | 41 | 43 -> "So close"
     | _ when guess < 41 -> "Too low"
-    | _ -> "Too high"
+    | _ when guess > 43 -> "Too high"
+    | _ -> "Correct"
 
 
 (*
     -need to ensure that all possible cases are covered
         
         
-        _ -> "Too high"
-        this is like an else statement as it will catch anything that
-        doesn't match the other patterns
+        _ -> "Correct"
+        this is the default case as the other patterns check to see
+        if they match, but if they don't then the answer must be correct
 *)
 
 
