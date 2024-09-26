@@ -1,20 +1,60 @@
 module TisburyTreasureHunt
 
 let getCoordinate (line: string * string): string =
-    failwith "Please implement the 'getCoordinate' function"
+    snd line 
 
 let convertCoordinate (coordinate: string): int * char = 
-    failwith "Please implement the 'convertCoordinate' function"
+    let number = int (System.Char.GetNumericValue coordinate[0])
+
+    let letter = coordinate[1]
+
+    (number, letter)
 
 let compareRecords (azarasData: string * string) (ruisData: string * (int * char) * string) : bool = 
-    failwith "Please implement the 'compareRecords' function"
+    // failwith "Please implement the 'compareRecords' function"
+    let azaraCoordinates = snd azarasData
+
+    let convertAzaraData = convertCoordinate azaraCoordinates
+    
+    match ruisData with
+    | (_, ruisData, _) -> convertAzaraData = ruisData
 
 let createRecord (azarasData: string * string) (ruisData: string * (int * char) * string) : (string * string * string * string) =
-    failwith "Please implement the 'createRecord' function"
+    match ruisData with 
+    | (ruisLocation, ruisCoordinates, ruisQuadrant) ->
+        if compareRecords azarasData ruisData then
+            let azaraCoordinates = snd azarasData
+            let treasure = fst azarasData
+            (azaraCoordinates, ruisLocation, ruisQuadrant, treasure)
+        else
+            ("", "", "", "")
+
+
+
+(*
+    snd function --> returns the second element of a tuple
+
+    use array slice sytax to extract substrings 
+        str1[0..2]
+
+
+
+    int (System.Char.GetNumericValue coordinate[0])
+    -this takes the char value and turns in into an int
 
 
 
 
+
+
+
+
+    createRecord -->
+        starting with Ruis' data, find match so it has location, coordinates, quadrant
+        then if that pattern matches, call compareRecords function to compare the two
+        result should be set up with (Azara Coordinates, Ruis Coordinates, Quadrant, Treaure)
+        if they don't match then give empty 
+*)
 
 
 
