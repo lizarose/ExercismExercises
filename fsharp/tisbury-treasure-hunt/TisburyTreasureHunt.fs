@@ -4,15 +4,14 @@ let getCoordinate (line: string * string): string =
     snd line 
 
 let convertCoordinate (coordinate: string): int * char = 
-    let number = int (System.Char.GetNumericValue coordinate[0])
+    let number = System.Char.GetNumericValue coordinate[0] |> int
 
     let letter = coordinate[1]
 
     (number, letter)
 
 let compareRecords (azarasData: string * string) (ruisData: string * (int * char) * string) : bool = 
-    // failwith "Please implement the 'compareRecords' function"
-    let azaraCoordinates = snd azarasData
+    let azaraCoordinates = getCoordinate azarasData
 
     let convertAzaraData = convertCoordinate azaraCoordinates
     
@@ -23,7 +22,7 @@ let createRecord (azarasData: string * string) (ruisData: string * (int * char) 
     match ruisData with 
     | (ruisLocation, ruisCoordinates, ruisQuadrant) ->
         if compareRecords azarasData ruisData then
-            let azaraCoordinates = snd azarasData
+            let azaraCoordinates = getCoordinate azarasData
             let treasure = fst azarasData
             (azaraCoordinates, ruisLocation, ruisQuadrant, treasure)
         else
