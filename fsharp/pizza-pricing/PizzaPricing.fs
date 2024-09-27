@@ -1,23 +1,50 @@
 module PizzaPricing
 
 // TODO: please define the 'Pizza' discriminated union type
+type Pizza =
+    //base cases
+    | Margherita
+    | Caprese
+    | Formaggio
+    //recursive cases
+    | ExtraSauce of Pizza
+    | ExtraToppings of Pizza
 
-let pizzaPrice (pizza: Pizza): int = failwith "Please implement the 'pizzaPrice' function"
-
-let orderPrice(pizzas: Pizza list): int = failwith "Please implement the 'orderPrice' function"
-
-
-
-
-
-
-
-
+let rec pizzaPrice (pizza: Pizza): int = 
+    match pizza with 
+    //base cases
+    | Margherita -> 7
+    | Caprese -> 9
+    | Formaggio -> 10
+    //recursive cases
+    | ExtraSauce pizza -> 1 + pizzaPrice pizza
+    | ExtraToppings pizza -> 2 + pizzaPrice pizza
 
 
+let orderPrice (pizzas: Pizza list): int = 
+    let totalPrice = pizzas |> List.sumBy pizzaPrice 
+
+    let additionalFee =
+        match List.length pizzas with 
+        | 1 -> 3
+        | 2 -> 2
+        | _ -> 0
+
+    totalPrice + additionalFee
 
 
 
+
+
+
+
+
+
+
+
+(*
+    don't need to write function for counting pizzas bc List.length does it for you
+*)
 
 
 
