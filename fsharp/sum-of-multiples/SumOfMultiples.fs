@@ -1,10 +1,8 @@
 module SumOfMultiples
 
 let sum (numbers: int list) (upperBound: int): int = 
-    let allNums = [1..upperBound - 1]
-
     let multiples =
-        allNums
+        [1..upperBound - 1]
         |> List.filter (fun number -> 
             List.exists (fun x -> x > 0 && number % x = 0) numbers)
 
