@@ -4,13 +4,10 @@ let sum (numbers: int list) (upperBound: int): int =
     let isMultiple number =
         List.exists (fun x -> x > 0 && number % x = 0) numbers
     
-    let multiples =
-        [1..upperBound - 1]
-        |> List.filter isMultiple |> List.distinct 
-    
-    List.sum multiples
-     
-
+    [1..upperBound - 1]
+    |> List.filter isMultiple
+    |> List.distinct
+    |> List.sum
 
 
 
