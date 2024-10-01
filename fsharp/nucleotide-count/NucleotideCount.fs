@@ -34,7 +34,30 @@ let nucleotideCounts (strand: string): Option<Map<char, int>> =
 
     As the 'yield' keyword pushes a single value into a list, the keyword, 'yield!', pushes a collection of values into the list.
 
+    Option.bind --> chain operations on Option types 
+                    -process a value inside an Option only if it contains a valid value(Some), and it skips the operation if the Option is None
+                    -useful for performing sequences of operations that might fail, without having to explicitly check for None at each step
 
+                    Input: an Option value and a function
+                    Behavior: 
+                            -if the Option is Some(x), it applies the function to x --> the function returns another Option
+                            -if the Option is None, it skips applying the function and directly returns None
+
+            example:
+            let incrementIfEven x = 
+                if x % 2 = 0 then 
+                    Some (x + 1)
+                else 
+                    None
+
+            let result = Option.bind incrementIfEven (Some 4)
+                //Result --> Some 5                                     4 is even so the function was applied which then returns Some 5 as the result
+
+            let result2 = Option.bind incrementIfEven (Some 3)
+                //Result --> None
+
+            let result3 = Option.bind incrementIfEven None
+                //Result --> None
 
 
 
