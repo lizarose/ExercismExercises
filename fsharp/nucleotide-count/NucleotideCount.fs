@@ -1,8 +1,19 @@
 module NucleotideCount
 
-let nucleotideCounts (strand: string): Option<Map<char, int>> =  failwith "You need to implement this function."
+let nucleotideCounts (strand: string): Option<Map<char, int>> =  
+    //initial map creation
+    let initialCharCount = Map.ofList [('A', 0); ('C', 0); ('G', 0); ('T', 0)]
+    //recursive function that takes in a counter and the chars that still need to be iterated through
+    let rec countNucleotides nucleotideMap remainingChars = 
+        match remainingChars with 
+        | [] -> Some nucleotideMap      //base case: returns final count of valid nucleotides
+        | char :: remainingChars ->     //pattern matches chars 
+            match Map.tryFind char nucleotideMap with 
+            | Some currentCount -> countNucleotides (Map.add char (currentCount + 1) nucleotideMap) remainingChars  //this is valid chars so count is updated
+            | None -> None              //invalid nucleotide
 
-
+    strand |> Seq.toList |> countNucleotides initialCharCount       //converts strand to list then calls function with initial map to start recursion
+  
 
 
 
@@ -16,4 +27,6 @@ let nucleotideCounts (strand: string): Option<Map<char, int>> =  failwith "You n
 
     map --> similar to a dictionary in C#
     map.containsKey --> looks for key
+
+    As the 'yield' keyword pushes a single value into a list, the keyword, 'yield!', pushes a collection of values into the list.
 *)
