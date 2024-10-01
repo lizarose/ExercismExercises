@@ -29,4 +29,7 @@ let nucleotideCounts (strand: string): Option<Map<char, int>> =
     map.containsKey --> looks for key
 
     As the 'yield' keyword pushes a single value into a list, the keyword, 'yield!', pushes a collection of values into the list.
+
+
+    this is basically tail recursion but problem is it doesn't handle long strands so it won't stackoverflow
 *)
