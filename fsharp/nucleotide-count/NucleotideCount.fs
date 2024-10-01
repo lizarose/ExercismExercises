@@ -1,23 +1,16 @@
 module NucleotideCount
 
 let nucleotideCounts (strand: string): Option<Map<char, int>> =  
-    //initial map creation
+
     let initialCharCount = Map.ofList [('A', 0); ('C', 0); ('G', 0); ('T', 0)]
-    //count nucleotides and check if valid nucleotides
+
     let countNucleotides nucleotideMap char = 
-        match Map.tryFind char nucleotideMap with 
-        | Some currentCount -> Map.add char (currentCount + 1) nucleotideMap
-        | None -> Map.empty     //if not valid nucleotides, then return empty map
+        nucleotideMap |> Option.bind (fun count -> 
+        match Map.tryFind char count with 
+        | Some currentCount -> Some (Map.add char (currentCount + 1) count)
+        | None -> None)
 
-    //use Seq.fold to calculate the nucleotide count
-    let result = strand |> Seq.fold countNucleotides initialCharCount
-
-    //check to see if empty to know if valid nucleotides or not
-    if Map.isEmpty result then    
-        None
-    else 
-        Some result
-
+    strand |> Seq.fold countNucleotides (Some initialCharCount)
 
 
 
@@ -58,6 +51,47 @@ let nucleotideCounts (strand: string): Option<Map<char, int>> =
 
             let result3 = Option.bind incrementIfEven None
                 //Result --> None
+
+
+
+
+
+
+
+
+
+
+
+            Option.bind -->
+                -it may or may not transform the data
+                -it may return the input itself
+                -it may transform the input and return
+                -it may cause trajectory change; Some or None in this case
+
+            
+
+            let result = input |> f1 |> f2 |> f3 |> f4
+
+
+                -this is a pipeline --> deals with sequential flow, one function call after the other
+                                        and the output of one goes into the next as input
+
+
+            let function num = 
+                Some num
+                |> Option.bind validation1
+                |> Option.map action1
+                |> Option.bind validation2
+                |> function
+                    | Some(x)
+                    | None -> 0
+
+
+
+
+
+
+
 
 
 
