@@ -5,13 +5,12 @@ let nucleotideCounts (strand: string): Option<Map<char, int>> =
     let initialCharCount = Map.ofList [('A', 0); ('C', 0); ('G', 0); ('T', 0)]
 
     let countNucleotides nucleotideMap char = 
-        nucleotideMap |> Option.bind (fun count -> 
-        match Map.tryFind char count with 
-        | Some currentCount -> Some (Map.add char (currentCount + 1) count)
+        nucleotideMap |> Option.bind (fun nm -> 
+        match nm |> Map.tryFind char with 
+        | Some currentCount -> Some (nm |> Map.add char (currentCount + 1))
         | None -> None)
 
     strand |> Seq.fold countNucleotides (Some initialCharCount)
-
 
 
 
