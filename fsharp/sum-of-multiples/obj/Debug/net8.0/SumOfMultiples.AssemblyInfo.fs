@@ -10,7 +10,7 @@ open System.Reflection
 [<assembly: System.Reflection.AssemblyCompanyAttribute("SumOfMultiples")>]
 [<assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")>]
 [<assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")>]
-[<assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8cfff71c76a0d08e7ee5764905650af0104611a7")>]
+[<assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+68f2b7e929b09d3e03851fa8ab7ea75983707cf1")>]
 [<assembly: System.Reflection.AssemblyProductAttribute("SumOfMultiples")>]
 [<assembly: System.Reflection.AssemblyTitleAttribute("SumOfMultiples")>]
 [<assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")>]
