@@ -1,29 +1,21 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public static class SumOfMultiples
 {
     public static int Sum(IEnumerable<int> multiples, int max)
-    {
-        var multiplesSet = new HashSet<int>();
-        
-        foreach(var multiple in multiples)
-        {
-            if(multiple != 0){
-                int currentNum = multiple;
-                while(currentNum < max)
-                {
-                    multiplesSet.Add(currentNum);
-                    currentNum += multiple;
-                }
-            }
-        }
+    {   
+        return multiples
+            .Where(multiples => multiples != 0)
+            .SelectMany (multiples => GetMultiples(multiples, max))
+            .ToHashSet()
+            .Sum();
+     }
 
-        int total = 0;
-        foreach(var value in multiplesSet)
-        {
-            total += value;
-        }
-        return total;        
+    public static IEnumerable<int> GetMultiples(int multiple, int max)
+    {
+     for(int current = multiple; current < max; current += multiple)
+         yield return current;
     }
 }
