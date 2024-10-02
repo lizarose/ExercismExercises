@@ -8,9 +8,7 @@ let empty: School = Map.empty
 
 //Roster for specific grade --> find and sort
 let grade (number: int) (school: School): string list = 
-    match Map.tryFind number school with
-    | Some students -> List.sort students
-    | None -> []
+    school |> Map.tryFind number |> Option.map List.sort |> Option.defaultValue []
 
 
 //Check if student is already in any grade --> ignore grade and focus just on name
@@ -18,12 +16,11 @@ let studentAlreadyInGrade (student: string) (school: School): bool =
     school |> Map.exists (fun _ students -> List.contains student students)
 
 //If student is not in a grade --> add to grade
-let add (student: string) (grade: int) (school: School): School = 
+let add (student: string) (gradeNum: int) (school: School): School = 
     if studentAlreadyInGrade student school then
         school
     else 
-        let studentsName = Map.tryFind grade school |> Option.defaultValue []
-        Map.add grade (student :: studentsName) school
+        school |> Map.add gradeNum (student :: (grade gradeNum school))
 
 
 //Roster for all students --> convert to kvp, collect and sort, remove dupes, back to list
