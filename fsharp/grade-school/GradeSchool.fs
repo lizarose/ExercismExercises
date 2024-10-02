@@ -2,8 +2,16 @@ module GradeSchool
 
 type School = Map<int, string list>
 
-let empty: School = Map.empty
 //Initialize empty roster for School
+let empty: School = Map.empty
+
+
+//Roster for specific grade --> find and sort
+let grade (number: int) (school: School): string list = 
+    match Map.tryFind number school with
+    | Some students -> List.sort students
+    | None -> []
+
 
 //Check if student is already in any grade --> ignore grade and focus just on name
 let studentAlreadyInGrade (student: string) (school: School): bool = 
@@ -14,9 +22,9 @@ let add (student: string) (grade: int) (school: School): School =
     if studentAlreadyInGrade student school then
         school
     else 
-        match Map.tryFind grade school with 
-        | Some studentsName ->  Map.add grade (student :: studentsName) school
-        | None -> Map.add grade [student] school
+        let studentsName = Map.tryFind grade school |> Option.defaultValue []
+        Map.add grade (student :: studentsName) school
+
 
 //Roster for all students --> convert to kvp, collect and sort, remove dupes, back to list
 let roster (school: School): string list = 
@@ -25,12 +33,6 @@ let roster (school: School): string list =
     |> Seq.collect (snd >> List.sort)
     |> Seq.distinct
     |> Seq.toList
-
-//Roster for specific grade --> find and sort
-let grade (number: int) (school: School): string list = 
-    match Map.tryFind number school with
-    | Some students -> List.sort students
-    | None -> []
 
 
 
