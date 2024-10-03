@@ -2,34 +2,47 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+
 public class GradeSchool
 {
-    private readonly HashSet<string> students = new();
-    private readonly Dictionary<string, int> grades = new();
+    private readonly Dictionary<int, List<string>> grades = new();
     
+    //add student to specific grade
     public bool Add(string student, int grade)
     {
-        if(grades.ContainsKey(student))
+        if(grades.Values.Any(g => g.Contains(student)))     //check if in grades
             return false;
-    
-        students.Add(student);
-        grades[student] = grade;
+        
+        if(!grades.ContainsKey(grade))                  //if grade doesn't exist --> create it
+            grades[grade] = new List<string>();
+        
+        grades[grade].Add(student);                 //add student to list for specific grade
         return true;
     }
 
+    //get entire roster
     public IEnumerable<string> Roster() => grades
-        .OrderBy(kvp => kvp.Value) //Sort by grade
-        .ThenBy(kvp => kvp.Key)    //Sort by student
-        .Select(kvp => kvp.Key)    //Select student
-        .ToList();
+         .OrderBy(kvp => kvp.Key)                               //sort by grade
+         .SelectMany(kvp => kvp.Value.OrderBy(name => name))    //sort by name
+         .ToList();
     
-    public IEnumerable<string> Grade(int grade) => grades
-        .Where(kvp => kvp.Value == grade)   //Filter students by grade
-        .Select(kvp => kvp.Key)             //Select student name
-        .OrderBy(name => name)              //Sort student names
-        .ToList();
-    
-    }
+    //get specific grade list
+    public IEnumerable<string> Grade(int grade) =>
+        grades.ContainsKey(grade)                           //check if grade exists
+        ? grades[grade].OrderBy(name => name).ToList()      //if yes, return list
+        : new List<string>();                               //if no, create list
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 
