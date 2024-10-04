@@ -10,7 +10,7 @@ open System.Reflection
 [<assembly: System.Reflection.AssemblyCompanyAttribute("NucleotideCount")>]
 [<assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")>]
 [<assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")>]
-[<assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b945a2b95a7861e33ad8d34f36a223bf7088f0bc")>]
+[<assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5ae399ac53b44e58b3a8c732cf2633f54ff1f1dc")>]
 [<assembly: System.Reflection.AssemblyProductAttribute("NucleotideCount")>]
 [<assembly: System.Reflection.AssemblyTitleAttribute("NucleotideCount")>]
 [<assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")>]
