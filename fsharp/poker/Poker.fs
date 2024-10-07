@@ -7,10 +7,10 @@ module Poker
         2. Find the best hands 
 *)
 type Suit =
-    | Hearts
-    | Spades
-    | Clubs
-    | Diamonds
+    | Hearts = 'H'
+    | Spades = 'S'
+    | Clubs = 'C'
+    | Diamonds = 'D'
 
 type Value = 
     | Two = 2
@@ -39,13 +39,15 @@ type HandType =
     | OnePair
     | HighCard
 
-type Card = { Suit: Suit; Value: Value; }
+type Card = { Suit: Suit; Value: Value; } 
 
 //list of Card objects
-type Hand = Card list 
+type Hand = Card list
 
-
-
+type HandOutcome = 
+    | Win of Hand
+    | Lose of Hand
+    | Tie 
 
 
 let isFlush (hand: Hand) : bool = 
@@ -89,15 +91,12 @@ let isStraight (hand: Hand) : bool =
 *)
 
 
-let isStraightFlush (hand: Hand) : bool = 
-    isFlush hand && isStraight hand 
+let isStraightFlush (hand: Hand) : bool = isFlush hand && isStraight hand 
 
 
 let isRoyalFlush (hand: Hand) : bool = 
     isStraightFlush hand &&
-    let values =  
-        hand
-        |> List.map (fun card -> int card.Value)
+    let values = hand |> List.map (fun card -> int card.Value)
     values |> List.sort = [10; 11; 12; 13; 14]
 (*
     - needs to be Flush and Straight
@@ -111,7 +110,6 @@ let isRoyalFlush (hand: Hand) : bool =
     - call values and sort it, having the nums equal certain nums bc a Royal Flush is 
         10, Jack, Queen, King, Ace of same suit
 *)
-
 
 let countValuePairs hand =
     hand
@@ -143,20 +141,13 @@ let countValuePairs hand =
 
 
 
-let countPairs (hand: Hand) : int = 
+let countPairs (hand: Hand) = 
     let cvp = countValuePairs hand
     cvp |> List.filter (fun count -> count = 2) |> List.length 
 
-let isOnePair (hand: Hand) : bool = 
-    countPairs hand = 1
+let isOnePair (hand: Hand) : bool = countPairs hand = 1
 
-let isTwoPair (hand: Hand) : bool = 
-    countPairs hand = 2
-
-
-
-
-
+let isTwoPair (hand: Hand) : bool = countPairs hand = 2
 
 
 let isThreeOfKind (hand: Hand) : bool = 
@@ -173,7 +164,6 @@ let isFullHouse (hand: Hand) : bool =
     let cvp = countValuePairs hand 
     let hasThreeOfKind = isThreeOfKind hand
     let hasPair = cvp |> List.exists (fun count -> count = 2)
-
     hasThreeOfKind && hasPair 
 (*
     -needs to have count of 3
@@ -181,9 +171,105 @@ let isFullHouse (hand: Hand) : bool =
 *)
 
 
+let rankHand (hand: Hand) : HandType = 
+    if isRoyalFlush hand then RoyalFlush
+    elif isStraightFlush hand then StraightFlush
+    elif isFourOfKind hand then FourOfKind
+    elif isFullHouse hand then FullHouse
+    elif isFlush hand then Flush
+    elif isStraight hand then Straight
+    elif isThreeOfKind hand then ThreeOfKind
+    elif isTwoPair hand then TwoPair
+    elif isOnePair hand then OnePair
+    else HighCard
 
 
+let handRankings = 
+    Map.ofList [
+        (RoyalFlush, 10);
+        (StraightFlush, 9);
+        (FourOfKind, 8);
+        (FullHouse, 7);
+        (Flush, 6);
+        (Straight, 5);
+        (ThreeOfKind, 4);
+        (TwoPair, 3);
+        (OnePair, 2);
+        (HighCard, 1);
+    ]
 
+// let compareHands (hand1: Hand) (hand2: Hand) : HandOutcome = 
+//     let rankHand1 = rankHand hand1
+//     let rankHand2 = rankHand hand2
+
+//     match rankHand1, rankHand2 with
+//     | r1, r2 when r1 > r2 -> Win hand1
+//     | r1, r2 when r1 < r2 -> Lose hand1
+//     | _ -> 
+//         let findHighCard hand = 
+//             hand
+//             |> List.map (fun card -> int card.Value)
+//             |> List.max
+
+//         let highCardHand1 = findHighCard hand1
+//         let highCardHand2 = findHighCard hand2
+
+//         if highCardHand1 > highCardHand2 then Win hand1
+//         elif highCardHand1 < highCardHand2 then Lose hand1
+//         else Tie
+(*
+    - compare two hands
+    - they are the same rank so looking to find highest card
+    - this is for ties to help break them
+*)
+
+let parseCard (cardStr: string) : Card = 
+    let value = 
+        match cardStr.[0] with
+        | '2' -> Value.Two
+        | '3' -> Value.Three
+        | '4' -> Value.Four
+        | '5' -> Value.Five
+        | '6' -> Value.Six
+        | '7' -> Value.Seven
+        | '8' -> Value.Eight
+        | '9' -> Value.Nine
+        | 'T' -> Value.Ten
+        | 'J' -> Value.Jack
+        | 'Q' -> Value.Queen
+        | 'K' -> Value.King
+        | 'A' -> Value.Ace
+        | _ -> failwith "Invalid Value"
+    let suit = 
+        match cardStr.[1] with
+        | 'H' -> Suit.Hearts
+        | 'S' -> Suit.Spades
+        | 'C' -> Suit.Clubs
+        | 'D' -> Suit.Diamonds
+        | _ -> failwith "Invalid Suit"  
+    { Suit = suit; Value = value }
+
+let parseHand (handStr: string) : Hand = 
+    handStr.Split(' ') |> Array.toList |> List.map parseCard
+
+
+let bestHands (hands: string list) =
+    let parsedHands = hands |> List.map parseHand
+
+    let bestRank = 
+        parsedHands
+        |> List.map rankHand
+        |> List.maxBy (fun handType -> Map.find handType handRankings)
+
+    hands |> List.filter (fun hand -> parseHand hand |> rankHand = bestRank)
+
+(*
+    - find best hand from list of hands
+    - need to rank them
+    - find highest rank
+    - determine best hand 
+    -
+*)
 
 
 //find card values

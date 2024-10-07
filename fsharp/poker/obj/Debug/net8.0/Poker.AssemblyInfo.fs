@@ -10,7 +10,7 @@ open System.Reflection
 [<assembly: System.Reflection.AssemblyCompanyAttribute("Poker")>]
 [<assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")>]
 [<assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")>]
-[<assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b33128836259593eb8a317b011a16307601a0b27")>]
+[<assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+668e4928c64165a25f9a953c3ecef2b1fbb82cc0")>]
 [<assembly: System.Reflection.AssemblyProductAttribute("Poker")>]
 [<assembly: System.Reflection.AssemblyTitleAttribute("Poker")>]
 [<assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")>]
