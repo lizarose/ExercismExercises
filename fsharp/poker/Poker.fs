@@ -1,5 +1,5 @@
 module Poker
-//Types
+        //Types
 type Suit =
     | Hearts = 'H' | Spades = 'S' | Clubs = 'C' | Diamonds = 'D'
     
@@ -16,7 +16,7 @@ type Hand = Card list
 
 
 
-//HandType Functions
+        //HandType Functions
 
 
 
@@ -87,7 +87,7 @@ let isFullHouse (hand: Hand) = isThreeOfKind hand && isOnePair hand
 
 
 
-//Rank the Hands
+        //Rank the Hands
 
 
 
@@ -125,7 +125,7 @@ let handRankings =
 
 
 
-//Compare the HandTypes
+        //Compare the HandTypes
 
 
 
@@ -175,7 +175,7 @@ let compareHands (hand1: Hand) (hand2: Hand) : Hand list =
 
 
 
-//Parsing Hands
+        //Parsing Hands
 
 
 
@@ -187,6 +187,7 @@ let parseSuit (s: char) : Suit =
     | 'C' -> Suit.Clubs
     | 'D' -> Suit.Diamonds
     | _ -> failwith "Invalid Suit"
+
 
 //Parse Value --> parses the value so input can be matched with correct value *Ten is a special case as 'char' can only go 0-9 so 10 is handled in parseCard*
 let parseValue (v: char) : Value  = 
@@ -206,6 +207,7 @@ let parseValue (v: char) : Value  =
     | 'A' -> Value.Ace
     | _ -> failwith "Invalid Valuessss"
 
+
 //Parse Card --> extracts the value and suit, returns a Card  *10 is handled here*
 let parseCard (cardStr: string) : Card =    
     let valueOfCard, suitOfCard = 
@@ -217,6 +219,7 @@ let parseCard (cardStr: string) : Card =
     
     { Suit = suit; Value = value }
 
+
 //Parse Hand --> takes a string of cards and splits the cards to their own string, returns a Hand (list of Card objects)
 let parseHand (handStr: string) : Hand = 
     handStr.Split(' ') 
@@ -227,7 +230,7 @@ let parseHand (handStr: string) : Hand =
 
 
 
-//Best Hands Functions
+        //Best Hands Functions
 
 
 
@@ -259,6 +262,8 @@ let findBestHand (winningHands: Hand list) : Hand list =
         else 
             hand :: bestHands
         ) [List.head winningHands] winningHands
+
+
 
 
 //Best Hands --> calls parsedHands, calls getBestRank, calls getWinningHands, calls findBestHand - returns the best hand(s)
