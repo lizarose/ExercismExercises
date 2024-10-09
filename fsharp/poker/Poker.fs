@@ -7,25 +7,15 @@ type Value =
     | Two = 2 | Three = 3 | Four = 4 | Five = 5 | Six = 6 | Seven = 7 | Eight = 8 | Nine = 9 | Ten = 10 | Jack = 11 | Queen = 12 | King = 13 | Ace = 14
     
 type HandType = 
-    | HighCard
-    | OnePair
-    | TwoPair 
-    | ThreeOfKind 
-    | Straight
-    | LowStraight
-    | Flush 
-    | FullHouse 
-    | FourOfKind 
-    | StraightFlush
-    | RoyalFlush 
+    | HighCard | OnePair | TwoPair  | ThreeOfKind  | Straight | LowStraight | Flush  | FullHouse  | FourOfKind  | StraightFlush | RoyalFlush 
 
 type Card = { Suit: Suit; Value: Value; }
 type Hand = Card list 
 
 let isFlush (hand: Hand) = 
-    hand 
-    |> List.map (fun card -> card.Suit) 
-    |> List.distinct 
+    hand
+    |> List.map (fun card -> card.Suit)
+    |> List.distinct
     |> List.length = 1
 
 let isLowStraight (values: int list) = 
@@ -118,16 +108,17 @@ let compareStraightFlush (hand1: Hand) (hand2: Hand) : Hand list =
     compareByCardValues hand1 hand2
 
 let compareFourOfKind (hand1: Hand) (hand2: Hand) : Hand list = 
-    let fourKindValue1 = hand1 |> countValuePairs |> List.find (fun count -> count = 4)
-    let fourKindValue2 = hand2 |> countValuePairs |> List.find (fun count -> count = 4)
+    let fourKindValue1 = hand1 |> List.sortBy (fun card -> int card.Value)
+    let fourKindValue2 = hand2 |> List.sortBy (fun card -> int card.Value)
     if fourKindValue1 > fourKindValue2 then [hand1] 
     elif fourKindValue1 < fourKindValue2 then [hand2]
     else [hand1; hand2]
 
 let compareFullHouse (hand1: Hand) (hand2: Hand) : Hand list = 
-    let threeValue1 = hand1 |> countValuePairs |> List.find (fun count -> count = 3)
-    let threeValue2 = hand2 |> countValuePairs |> List.find (fun count -> count = 3)
-    if threeValue1 > threeValue2 then [hand1] 
+    let threeValue1 = hand1 |> List.sortBy (fun card -> int card.Value)
+    let threeValue2 = hand2 |> List.sortBy (fun card -> int card.Value)
+
+    if threeValue1 > threeValue2 then [hand1]
     elif threeValue1 < threeValue2 then [hand2]
     else [hand1; hand2]
 
@@ -191,27 +182,41 @@ let parseHand (handStr: string) : Hand =
     |> Array.toList 
     |> List.map parseCard
 
-let bestHands (hands: string list) : string list = 
-    let parsedHands = 
-        hands |> List.map (fun handStr -> handStr, parseHand handStr)
 
-    let bestRank: HandType = 
-        parsedHands 
-        |> List.map (snd >> rankHand)
-        |> List.maxBy (fun handType -> handRankings.[handType])
+//parse hands into tuple list
+let parsedHands (hands: string list) = 
+    hands |> List.map (fun handStr -> handStr, parseHand handStr)
 
-    let winningHands: Hand list = 
-        parsedHands
-        |> List.filter (fun (_, hand) -> rankHand hand = bestRank)
-        |> List.map snd
+//find rank of hands from parsedHands then find highest ranking
+let getBestRank (parsedHands: (string * Hand) list) : HandType = 
+    parsedHands 
+    |> List.map (snd >> rankHand)
+    |> List.maxBy (fun handType -> handRankings.[handType])
 
-    match winningHands with 
-    | [] -> []
+//filter parsedHands to only show rank that matches bestRank --> list of winningHands
+let getWinningHands (parsedHands: (string * Hand) list) (bestRank: HandType): Hand list = 
+    parsedHands
+    |> List.filter (fun (_, hand) -> rankHand hand = bestRank)
+    |> List.map snd
+
+//find best hand with multiple winning hands
+let findBestHand (winningHands: Hand list) : Hand list = 
+    match winningHands with
     | firstHand :: remainHand ->
-        let bestHand = 
-            List.fold (fun currentBest hand ->
-                if compareHands hand currentBest = [currentBest] then currentBest else hand
-            ) firstHand remainHand
-            
-        parsedHands 
-        |> List.choose (fun (og, hand) -> if hand = bestHand then Some og else None) 
+        List.fold (fun (bestHands: Hand list) hand ->
+            let compareResults = compareHands hand (List.head bestHands)
+            if compareResults = [List.head bestHands] then bestHands
+            elif compareResults = [hand] then [hand]
+            else 
+                if List.contains hand bestHands then bestHands
+                else hand :: bestHands
+        ) [firstHand] remainHand
+    | [] -> []
+
+let bestHands (hands: string list) : string list = 
+    let parsedHands = parsedHands hands 
+    let bestRank = getBestRank parsedHands
+    let winningHands = getWinningHands parsedHands bestRank
+    let bestHand = findBestHand winningHands
+
+    parsedHands |> List.choose (fun (og, hand) -> if List.contains hand bestHand then Some og else None) 
