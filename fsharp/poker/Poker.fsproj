@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Compile Include="Poker.fs" />
+    <Compile Include="poker-jay.fs" />
     <Compile Include="PokerTests.fs" />
   </ItemGroup>
 

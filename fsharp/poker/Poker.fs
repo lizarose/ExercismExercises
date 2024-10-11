@@ -1,42 +1,39 @@
 module Poker
 
 type Suit = Hearts = 'H' | Spades = 'S' | Clubs = 'C' | Diamonds = 'D'
-type Value = Two = 2 | Three = 3 | Four = 4 | Five = 5 | Six = 6 | Seven = 7 | Eight = 8 | Nine = 9 | Ten = 10 | Jack = 11 | Queen = 12 | King = 13 | Ace = 14 
+type Value = Val of int
 type HandType = HighCard | OnePair | TwoPair  | ThreeOfKind  | Straight | LowStraight | Flush  | FullHouse  | FourOfKind  | StraightFlush | RoyalFlush
 type Card = { Suit: Suit; Value: Value; }
 type Hand = Card list 
 
+let (|IntVal|_|) (s: string) = 
+    match System.Int32.TryParse s with
+    | true, i -> Some i
+    | _ -> None
+
 let parseCard (cardStr: string) : Card =    
     let parseSuit = function 'H' -> Suit.Hearts | 'S' -> Suit.Spades | 'C' -> Suit.Clubs | 'D' -> Suit.Diamonds | _ -> failwith "Invalid Suit"
     let parseValue = function 
-        | '2' -> Value.Two
-        | '3' -> Value.Three
-        | '4' -> Value.Four
-        | '5' -> Value.Five
-        | '6' -> Value.Six
-        | '7' -> Value.Seven
-        | '8' -> Value.Eight
-        | '9' -> Value.Nine
-        | 'T' -> Value.Ten
-        | 'J' -> Value.Jack
-        | 'Q' -> Value.Queen
-        | 'K' -> Value.King
-        | 'A' -> Value.Ace
+        | "J" -> Val 11
+        | "Q" -> Val 12
+        | "K" -> Val 13
+        | "A" -> Val 14
+        | IntVal x-> Val x
         | _ -> failwith "Invalid Value"
     let valueOfCard, suitOfCard = 
         if cardStr.Length = 3 then cardStr.[0..1], cardStr.[2] else cardStr.[0].ToString(), cardStr.[1]
-    { Suit = parseSuit suitOfCard; Value = parseValue (if valueOfCard = "10" then 'T' else valueOfCard.[0]) }
+    { Suit = parseSuit suitOfCard; Value = parseValue valueOfCard }
 
 let isFlush hand =  hand |> List.map (fun card -> card.Suit) |> List.distinct |> List.length = 1
-let isLowStraight values = values = [2; 3; 4; 5; 14]
+let isLowStraight values = values = [Val 2; Val 3; Val 4; Val 5; Val 14]
 let isStraight hand = 
-    let values = hand |> List.map (fun card -> int card.Value) |> List.sort
-    values |> List.pairwise |> List.forall (fun (x, y) -> y = x + 1) || isLowStraight values
+    let values = hand |> List.map (fun card -> card.Value) |> List.sort
+    values |> List.pairwise |> List.forall (fun (Val x, Val y) -> y = x + 1) || isLowStraight values
 let isStraightFlush hand = isFlush hand && isStraight hand 
 let isRoyalFlush hand = 
-    isStraightFlush hand && hand |> List.map (fun card -> int card.Value) |> List.sort = [10; 11; 12; 13; 14]
+    isStraightFlush hand && hand |> List.map (fun card -> card.Value) |> List.sort = [Val 10; Val 11; Val 12; Val 13; Val 14]
 let countValuePairs hand = 
-    hand |> List.map (fun card -> int card.Value) |> List.countBy id |> List.map snd
+    hand |> List.map (fun card -> card.Value) |> List.countBy id |> List.map snd
 let countPairs hand = countValuePairs hand |> List.filter ((=) 2) |> List.length 
 let isOnePair hand = countPairs hand = 1
 let isTwoPair hand = countPairs hand = 2
@@ -52,7 +49,7 @@ let rankHand hand =
     | _ when isFullHouse hand -> FullHouse
     | _ when isFlush hand -> Flush
     | _ when isStraight hand -> 
-        let values = hand |> List.map (fun card -> int card.Value) |> List.sort
+        let values = hand |> List.map (fun card -> card.Value) |> List.sort
         if isLowStraight values then LowStraight else Straight
     | _ when isThreeOfKind hand -> ThreeOfKind
     | _ when isTwoPair hand -> TwoPair
@@ -67,7 +64,7 @@ let compareHands (hand1: Hand) (hand2: Hand) : Hand list =
     else 
         let compareHandsByValues (hand1: Hand) (hand2: Hand) (descending: bool) : Hand list = 
             let sortFunc = if descending then List.sortDescending else List.sort
-            let sortedValues hand = hand |> List.map (fun card -> int card.Value) |> sortFunc
+            let sortedValues hand = hand |> List.map (fun card -> card.Value) |> sortFunc
             if sortedValues hand1 > sortedValues hand2 then [hand1]
             elif sortedValues hand1 < sortedValues hand2 then [hand2]
             else [hand1; hand2]
@@ -94,5 +91,9 @@ let bestHands hands =
             | [h] when h = List.head bestHands -> bestHands 
             | _ -> hand :: bestHands) [List.head winningHands] winningHands
 
-    let bestHand =  parsedHands |> getBestRank |> getWinningHands parsedHands |> findBestHand
-    parsedHands |> List.choose (fun (og, hand) -> if List.contains hand bestHand then Some og else None)
+    let bestHands = 
+        parsedHands 
+        |> getBestRank 
+        |> getWinningHands parsedHands 
+        |> findBestHand
+    parsedHands |> List.choose (fun (og, hand) -> if bestHands |> List.contains hand  then Some og else None)
